@@ -119,6 +119,21 @@ final class MiscTests: MemoryRendererTestCase {
         try XCTAssertEqual(render(raw: template, ["id": 42, "name": "Tanner"]), "User 42!")
     }
 
+    func testEqualNil() throws {
+        let template = #"#if(id == nil):id is nil#endif"#
+        try XCTAssertEqual(render(raw: template, ["id": nil, "name": "Tanner"]), "id is nil")
+    }
+
+    func testVarEqualNil() throws {
+        let template = """
+        #var(foo = nil)
+        #if(foo == nil):
+            foo is nil
+        #endif
+        """
+        try XCTAssertEqual(render(raw: template), "foo is nil")
+    }
+
     func testStringIf() throws {
         TemplateRenderer.Option.missingVariableThrows = false
         let template = #"#if(name):Hello, #(name)!#else:No Name!#endif"#
